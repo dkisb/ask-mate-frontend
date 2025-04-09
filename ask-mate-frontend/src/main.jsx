@@ -10,13 +10,14 @@ import Layout from './Layout.jsx';
 
 const router = createBrowserRouter([
   {
+    path: '/',
+    element: <LoginPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: '/',
-        element: <LoginPage />,
-      },
       {
         path: '/home',
         element: <HomePage />,
