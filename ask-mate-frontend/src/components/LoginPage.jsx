@@ -1,17 +1,17 @@
-import StartPage from '../StartPage/StartPage';
 import { useState } from 'react';
-import './LoginPage.css';
-import HomePage from ./HomePage.jsx;
+//import './LoginPage.css';
+import HomePage from './HomePage.jsx';
 
 function LoginPage() {
   const [registerClicked, setRegisterClicked] = useState(false);
   const [userName, setUserName] = useState(null);
   const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState(null);
   const [existedUser, setExistedUser] = useState(false);
   const [successfulRegister, setSuccessfulRegister] = useState(false);
   const [rightLogin, setRightLogin] = useState(true);
-  const [activeUser, setActiveUser] = useState(null);
-  //const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isActiveUser, setActiveUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   function handleRegister() {
     setRegisterClicked(true);
@@ -23,29 +23,30 @@ function LoginPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),
     });
-    const isNewUser = await response.json();
-    if (!isNewUser) {
+    const validation = await response.json();
+    console.log("Validation: " + validation)
+    if (!validation) {
       setExistedUser(true);
     } else {
       setExistedUser(false);
       setSuccessfulRegister(true);
-      setActiveUser(isNewUser);
+      setActiveUser(validation);
     }
   }
 
   async function postLogin(user) {
-    const response = await fetch('/api/users/login/', {
+    const response = await fetch('/api/user/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),
     });
-    const loginUser = await response.json();
-    if (loginUser === 'Invalid login') {
+    const isLoginUser = await response.json();
+    if (!isLoginUser) {
       setRightLogin(false);
     } else {
       setRightLogin(true);
       setSuccessfulRegister(true);
-      setActiveUser(loginUser);
+      setActiveUser(isLoginUser);
       setIsLoggedIn(true);
     }
   }
@@ -58,7 +59,7 @@ function LoginPage() {
 
   function handleLogin(e) {
     e.preventDefault();
-    const user = { username: userName, password: password, email: email};
+    const user = { username: userName, password: password};
     postLogin(user);
   }
 
@@ -113,6 +114,12 @@ function LoginPage() {
                     autoComplete="off"
                   />
                   <br />
+                  <input 
+                        onChange={(e) => setEmail(e.target.value)}
+                        type='text'
+                        placeholder='email'
+                        autoComplete='off'/>
+                  <br />  
                   <button type="submit">Register</button>
                 </form>
               )}
@@ -121,8 +128,8 @@ function LoginPage() {
         ) : (
           <div>
             {successfulRegister && (
-              <StartPage
-                user={activeUser}
+              <HomePage
+                isActiveUser={isActiveUser}
                 onLoggedIn={setIsLoggedIn}
                 onSuccessfulRegister={setSuccessfulRegister}
                 onActiveUser={setActiveUser}
