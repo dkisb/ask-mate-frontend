@@ -6,22 +6,26 @@ import HomePage from './components/HomePage.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import QuestionPage from './components/QuestionPage.jsx';
 import ErrorPage from './ErrorPage.jsx';
+import Layout from './Layout.jsx';
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <LoginPage />,
+    element: <Layout />,
     errorElement: <ErrorPage />,
-  },
-  {
-    path: '/home',
-    element: <HomePage />,
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: '/question/:id',
-    element: <QuestionPage />,
-    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: '/',
+        element: <LoginPage />,
+      },
+      {
+        path: '/home',
+        element: <HomePage />,
+      },
+      {
+        path: '/question/:id',
+        element: <QuestionPage />,
+      },
+    ],
   },
 ]);
 
