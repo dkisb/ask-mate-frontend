@@ -2,3 +2,6 @@
 @plugin "daisyui" {
   themes: dracula;
 }
+.custom-dark {
+  @apply bg-[#2a2d3e] text-white;
+}

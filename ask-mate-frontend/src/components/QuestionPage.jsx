@@ -84,7 +84,7 @@ export default function QuestionPage() {
       ) : (
         <div className="mb-6">
           <h2 className="text-xl font-semibold">{question.title}</h2>
-          <p className="text-lg font-bold mb-4">{question.content}</p>
+          <p className="text-gray-500">{question.content}</p>
           <small className="text-gray-600">Created: {question.created}</small>
         </div>
       )}
