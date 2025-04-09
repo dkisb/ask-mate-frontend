@@ -9,7 +9,7 @@ export default function NavBar() {
         </Link>
       </div>
       <div className="flex-none">
-        <Link to="/login">
+        <Link to="/">
           <button className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">Logout</button>
         </Link>
       </div>
