@@ -22,7 +22,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <h1>All Questions</h1>
+      <h1>Home of all questions</h1>
       {loading ? (
         <p>Loading...</p>
       ) : (
