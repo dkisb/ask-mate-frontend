@@ -1,20 +1,21 @@
-import { useState } from 'react';
-//import './LoginPage.css';
+import { useState} from 'react';
 import HomePage from './HomePage.jsx';
+import { Link } from 'react-router-dom';
+
 
 function LoginPage() {
-  const [registerClicked, setRegisterClicked] = useState(false);
   const [userName, setUserName] = useState(null);
   const [password, setPassword] = useState(null);
   const [email, setEmail] = useState(null);
-  const [existedUser, setExistedUser] = useState(false);
-  const [successfulRegister, setSuccessfulRegister] = useState(false);
-  const [rightLogin, setRightLogin] = useState(true);
-  const [isActiveUser, setActiveUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  function handleRegister() {
-    setRegisterClicked(true);
+  const [isNewUser, setIsNewUser] = useState(false);
+  const [userExists, setUserExists] = useState(false);
+  const [successfulRegistration, setSuccessfulregistration] = useState(false);
+  const [invalidLogin, setInvalidLogin] = useState(false);
+  const [userId, setUserId] = useState(null);
+  
+  function handleNewUser() {
+    setIsNewUser(true);
   }
 
   async function postRegistration(user) {
@@ -23,14 +24,16 @@ function LoginPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),
     });
-    const validation = await response.json();
-    console.log("Validation: " + validation)
-    if (!validation) {
-      setExistedUser(true);
+    const isUserNameExists = await response.json();
+    if (isUserNameExists) {
+      setUserExists(true);
     } else {
-      setExistedUser(false);
-      setSuccessfulRegister(true);
-      setActiveUser(validation);
+      setUserExists(false);
+      setIsNewUser(false);
+      setSuccessfulregistration(true);
+      setPassword(null);
+      setEmail(null);
+      setUserName(null);
     }
   }
 
@@ -40,14 +43,14 @@ function LoginPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),
     });
-    const isLoginUser = await response.json();
-    if (!isLoginUser) {
-      setRightLogin(false);
+    const loggedInUser = await response.json();
+    if (loggedInUser.userId == 0) {
+      setInvalidLogin(true);
     } else {
-      setRightLogin(true);
-      setSuccessfulRegister(true);
-      setActiveUser(isLoginUser);
+      setInvalidLogin(false);
       setIsLoggedIn(true);
+      setUserId(loggedInUser.userId);
+      setPassword(null); 
     }
   }
 
@@ -63,83 +66,95 @@ function LoginPage() {
     postLogin(user);
   }
 
-  return (
-    <>
-      <div>
-        {!successfulRegister ? (
-          <div className="user-page">
-            <h1 className="game-name">Welcome to the 21 card game!</h1>
-            <div>
-              <div className="error-message">
-                {!rightLogin && <h2>Wrong username or password. Please try again!</h2>}
-              </div>
-              {!registerClicked && (
-                <div className="login-form">
-                  <h2>Please log in!</h2>
-                  <form onSubmit={handleLogin}>
-                    <input onChange={(e) => setUserName(e.target.value)} type="text" placeholder="username" />
-                    <br />
-                    <input
-                      onChange={(e) => setPassword(e.target.value)}
-                      type="password"
-                      placeholder="password"
-                      autoComplete="off"
-                    />
-                    <br />
-                    <button type="submit">Login</button>
-                  </form>
-                  <div className="register-user">
-                    <h4 className="register-new">Don&apos;t have an account yet?</h4>
-                    <button onClick={handleRegister}>Register</button>
-                  </div>
-                </div>
-              )}
-            </div>
+  function handleLogout() {
+    setIsLoggedIn(false);
+    setUserName(null);
+    setUserId(null);
+  }
 
-            {registerClicked && existedUser && (
-              <div className="error-message">
-                <h2>This user already exists. Try a new name! </h2>
+  return (
+    <div>
+      {!isLoggedIn && !isNewUser && (
+        <>
+        <div>
+          <h1>Welcome to askmate page!</h1>
+        </div><div>
+            <h2>Please log in!</h2>
+            <form onSubmit={handleLogin}>
+              <input onChange={(e) => setUserName(e.target.value)}
+                type="text"
+                placeholder="username" />
+              <br />
+              <input
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="password"
+                autoComplete="off" />
+              <br />
+              <button type="submit">Login</button>
+            </form>
+            <div>
+              <h4>Don&apos;t have an account yet?</h4>
+              <button onClick={handleNewUser}>Register</button>
+            </div>
+          </div></>
+      )}
+      {isNewUser && (
+        <><form onSubmit={handleRegistration}>
+          <h2>Register to our site</h2>
+          <input onChange={(e) => setUserName(e.target.value)} type="text" placeholder="username" />
+          <br />
+          <input
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            placeholder="password"
+            autoComplete="off" />
+          <br />
+          <input
+            onChange={(e) => setEmail(e.target.value)}
+            type='text'
+            placeholder='email'
+            autoComplete='off' />
+          <br />
+          <button type="submit">Register</button>
+        </form>
+        <div>
+            {userExists && (
+              <div>
+                <h2>This username is already exists. Try another one!</h2>
               </div>
             )}
-            <div className="registration-form">
-              {registerClicked && !successfulRegister && (
-                <form onSubmit={handleRegistration}>
-                  <h2>Register to our site</h2>
-                  <input onChange={(e) => setUserName(e.target.value)} type="text" placeholder="username" />
-                  <br />
-                  <input
-                    onChange={(e) => setPassword(e.target.value)}
-                    type="password"
-                    placeholder="password"
-                    autoComplete="off"
-                  />
-                  <br />
-                  <input 
-                        onChange={(e) => setEmail(e.target.value)}
-                        type='text'
-                        placeholder='email'
-                        autoComplete='off'/>
-                  <br />  
-                  <button type="submit">Register</button>
-                </form>
-              )}
+        </div></>
+      )}
+        <div>
+          {successfulRegistration && !isLoggedIn && (
+            <div>
+              <h2>Successful registration! Please login!</h2>
             </div>
-          </div>
-        ) : (
-          <div>
-            {successfulRegister && (
-              <HomePage
-                isActiveUser={isActiveUser}
-                onLoggedIn={setIsLoggedIn}
-                onSuccessfulRegister={setSuccessfulRegister}
-                onActiveUser={setActiveUser}
-              />
             )}
-          </div>
-        )}
+        </div>
+      <div>
+        <div>
+          {isLoggedIn && (
+
+            <>
+            <Link to={`/home`} state={{userName, userId}}>
+              Go Homepage
+            </Link>
+            <button onClick={handleLogout}>Logout</button>
+            </>
+          )}
+        </div>
+        <div>
+          {invalidLogin && (
+            <div>
+              <h2>Wrong username or password. Please try again!</h2>
+            </div>
+          )}
+        </div>
       </div>
-    </>
-  );
+    </div>
+  )
 }
 
 export default LoginPage;
