@@ -1,7 +1,5 @@
-import { useState} from 'react';
-import HomePage from './HomePage.jsx';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 
 function LoginPage() {
   const [userName, setUserName] = useState(null);
@@ -13,7 +11,7 @@ function LoginPage() {
   const [successfulRegistration, setSuccessfulregistration] = useState(false);
   const [invalidLogin, setInvalidLogin] = useState(false);
   const [userId, setUserId] = useState(null);
-  
+
   function handleNewUser() {
     setIsNewUser(true);
   }
@@ -50,7 +48,7 @@ function LoginPage() {
       setInvalidLogin(false);
       setIsLoggedIn(true);
       setUserId(loggedInUser.userId);
-      setPassword(null); 
+      setPassword(null);
     }
   }
 
@@ -62,7 +60,7 @@ function LoginPage() {
 
   function handleLogin(e) {
     e.preventDefault();
-    const user = { username: userName, password: password};
+    const user = { username: userName, password: password };
     postLogin(user);
   }
 
@@ -73,88 +71,110 @@ function LoginPage() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center px-6 py-8">
       {!isLoggedIn && !isNewUser && (
-        <>
-        <div>
-          <h1>Welcome to askmate page!</h1>
-        </div><div>
-            <h2>Please log in!</h2>
-            <form onSubmit={handleLogin}>
-              <input onChange={(e) => setUserName(e.target.value)}
-                type="text"
-                placeholder="username" />
-              <br />
-              <input
-                onChange={(e) => setPassword(e.target.value)}
-                type="password"
-                placeholder="password"
-                autoComplete="off" />
-              <br />
-              <button type="submit">Login</button>
-            </form>
-            <div>
-              <h4>Don&apos;t have an account yet?</h4>
-              <button onClick={handleNewUser}>Register</button>
-            </div>
-          </div></>
-      )}
-      {isNewUser && (
-        <><form onSubmit={handleRegistration}>
-          <h2>Register to our site</h2>
-          <input onChange={(e) => setUserName(e.target.value)} type="text" placeholder="username" />
-          <br />
-          <input
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-            placeholder="password"
-            autoComplete="off" />
-          <br />
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            type='text'
-            placeholder='email'
-            autoComplete='off' />
-          <br />
-          <button type="submit">Register</button>
-        </form>
-        <div>
-            {userExists && (
-              <div>
-                <h2>This username is already exists. Try another one!</h2>
-              </div>
-            )}
-        </div></>
-      )}
-        <div>
-          {successfulRegistration && !isLoggedIn && (
-            <div>
-              <h2>Successful registration! Please login!</h2>
-            </div>
-            )}
-        </div>
-      <div>
-        <div>
-          {isLoggedIn && (
-
-            <>
-            <Link to={`/home`} state={{userName, userId}}>
-              Go Homepage
-            </Link>
-            <button onClick={handleLogout}>Logout</button>
-            </>
-          )}
-        </div>
-        <div>
+        <div className="w-full max-w-md bg-white rounded-lg shadow dark:bg-gray-800 dark:border dark:border-gray-700 p-8 space-y-6">
+          <h1 className="text-2xl font-bold text-center text-gray-900 dark:text-white">Welcome to AskMate!</h1>
+          <h2 className="text-lg font-medium text-center text-gray-600 dark:text-gray-300">Please log in</h2>
+          <form onSubmit={handleLogin} className="space-y-4">
+            <input
+              onChange={(e) => setUserName(e.target.value)}
+              type="text"
+              placeholder="Username"
+              className="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+              required
+            />
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              placeholder="Password"
+              autoComplete="off"
+              className="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg"
+            >
+              Login
+            </button>
+          </form>
+          <div className="text-center">
+            <h4 className="text-sm text-gray-600 dark:text-gray-300">Don’t have an account yet?</h4>
+            <button onClick={handleNewUser} className="text-blue-600 hover:underline dark:text-blue-400 mt-1">
+              Register
+            </button>
+          </div>
           {invalidLogin && (
-            <div>
+            <div className="text-center text-red-500 text-sm">
               <h2>Wrong username or password. Please try again!</h2>
             </div>
           )}
         </div>
-      </div>
+      )}
+
+      {isNewUser && (
+        <div className="w-full max-w-md bg-white rounded-lg shadow dark:bg-gray-800 dark:border dark:border-gray-700 p-8 space-y-6 mt-4">
+          <h2 className="text-xl font-bold text-center text-gray-900 dark:text-white">Register to our site</h2>
+          <form onSubmit={handleRegistration} className="space-y-4">
+            <input
+              onChange={(e) => setUserName(e.target.value)}
+              type="text"
+              placeholder="Username"
+              className="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+              required
+            />
+            <input
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              placeholder="Password"
+              autoComplete="off"
+              className="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+              required
+            />
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              placeholder="Email"
+              autoComplete="off"
+              className="w-full p-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+              required
+            />
+            <button
+              type="submit"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2.5 rounded-lg"
+            >
+              Register
+            </button>
+          </form>
+          {userExists && (
+            <div className="text-center text-red-500 text-sm">
+              <h2>This username already exists. Try another one!</h2>
+            </div>
+          )}
+        </div>
+      )}
+
+      {successfulRegistration && !isLoggedIn && (
+        <div className="mt-4 text-center text-green-500">
+          <h2>Successful registration! Please login!</h2>
+        </div>
+      )}
+
+      {isLoggedIn && (
+        <div className="mt-6 text-center text-white space-y-4">
+          <h2 className="text-xl">Welcome, {userName}!</h2>
+          <Link to={`/home`} state={{ userName, userId }} className="text-blue-400 underline">
+            Go to Homepage
+          </Link>
+          <br />
+          <button onClick={handleLogout} className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-white">
+            Logout
+          </button>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 export default LoginPage;
