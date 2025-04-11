@@ -27,6 +27,18 @@ export default function HomePage() {
     fetchData();
   }, []);
 
+  async function addPoints() {
+    const response = await fetch('/api/user/', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId: userId, points: 5}),
+    });
+    const data = await response.json();
+    console.log(data);
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('Title:', questionTitle);
@@ -37,13 +49,14 @@ export default function HomePage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ title: questionTitle, content: questionContent, userId: 1 }),
+        body: JSON.stringify({ title: questionTitle, content: questionContent, userId: userId}),
       });
       const data = await response.json();
       console.log('New question created:', data);
       setQuestionTitle('');
       setQuestionContent('');
       fetchData();
+      addPoints();
     } catch (error) {
       console.error('Error creating question:', error);
     }
@@ -104,7 +117,7 @@ export default function HomePage() {
               <div className="collapse-title font-semibold">{question.title}</div>
               <div className="collapse-content text-sm">
                 <div>{question.content}</div>
-                <Link to={`/question/${question.id}`} state={{userName, userId}} className="btn mt-2">
+                <Link to={`/question/${question.id}`} state={{userName, userId, questionUserId: question.userId}} className="btn mt-2">
                   See Comments
                 </Link>
               </div>

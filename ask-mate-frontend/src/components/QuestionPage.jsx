@@ -6,18 +6,19 @@ export default function QuestionPage() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [commentText, setCommentText] = useState('');
-  const [newAnswerCreated, setNewAnswerCreated] = useState(false);
+  //const [newAnswerCreated, setNewAnswerCreated] = useState(false);
   const [newCommentData, setNewCommentData] = useState(null);
   const { id } = useParams();
 
   const location = useLocation();
-  const { userName, userId } = location.state || {};
+  const { userName, userId, questionUserId } = location.state || {};
 
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
         const response = await fetch(`/api/question/${id}`);
         const data = await response.json();
+        console.log(data)
         setQuestion(data);
         setLoading(false);
       } catch (error) {
@@ -35,6 +36,7 @@ export default function QuestionPage() {
       try {
         const response = await fetch(`/api/answer/${id}`);
         const data = await response.json();
+        console.log(data)
         setComments(data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -42,6 +44,18 @@ export default function QuestionPage() {
     };
     fetchComments()
   }, [id]);
+
+  async function addPoints() {
+    const response = await fetch('/api/user/', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ userId: userId, points: 10}),
+    });
+    const data = await response.json();
+    console.log(data);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,7 +86,8 @@ export default function QuestionPage() {
       setNewCommentData(newComment);
       setComments([...comments, newComment]);
       setCommentText('');
-      setNewAnswerCreated(true);
+      //setNewAnswerCreated(true);
+      addPoints();
     } catch (error) {
       console.error('Error posting comment:', error);
       alert('Failed to post comment. Please try again.');
@@ -117,15 +132,11 @@ export default function QuestionPage() {
 
       <h3 className="text-lg font-bold mb-4">Comments</h3>
       {sortedComments.length > 0 ? (
-        sortedComments.map((comment) => (
-          <div key={comment.id} className="p-6 mb-3 bg-white rounded-lg border-t border-gray-200">
+        sortedComments.map((comment, index) => (
+          <div key={index} className="p-6 mb-3 bg-white rounded-lg border-t border-gray-200">
             <p className="text-lg font-bold mb-4">{comment.content}</p>
-            {newAnswerCreated ? (
-              <small className="text-gray-600">
-              By {userName} on {newCommentData.createdAt} </small>) : 
-              (<small className="text-gray-600">
-              By {userName} on {comment.created} </small>)
-              }
+            <small className="text-gray-600">
+              {comment.created} </small>
           </div>
         ))
       ) : (
