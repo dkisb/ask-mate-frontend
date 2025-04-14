@@ -30,7 +30,7 @@
 ## About The Project
 
 This is a full-stack web application's frontend repository written in React.js using Tailwind and DaisyUI as a styling.
-It delivers a dynamic question-and-answer platform's frontend pages. Designed to enable users to post and respond to questions across diverse topics.
+It delivers a dynamic question-and-answer platform's frontend page. Designed to enable users to post and respond to questions across diverse topics.
 
 [Backend Repository](https://github.com/CodecoolGlobal/ask-mate-oop-java-dkisb)
 
