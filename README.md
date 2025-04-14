@@ -1,4 +1,4 @@
-# ask-mate-oop-backend
+# ask-mate-oop-frontend
 
 <a id="readme-top"></a>
 
