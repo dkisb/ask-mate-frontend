@@ -50,19 +50,10 @@ It delivers a dynamic question-and-answer platform's frontend page. Designed to 
 
 ### Prerequisites
 
-- vite
+- npm
   ```sh
-  npm install vite@latest
+  npm install
   ```
-- tailwind
-  ```sh
-  npm install tailwindcss @tailwindcss/vite
-  ```
-- daisyUI
-  ```sh
-  npm i -D daisyui@latest
-  ```
-
 ### Installation
 
 1. Clone the repo
